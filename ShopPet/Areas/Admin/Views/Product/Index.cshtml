@@ -1,0 +1,578 @@
+﻿@model X.PagedList.IPagedList<ProductViewModel>
+
+@using ShopPet.Enum;
+@using X.PagedList.Mvc.Core;
+@using ShopPet.Extensions;
+@inject CheckRole CheckRoleInstance
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var dsLoaiSp = (List<LoaiSanPham>)ViewBag.ListLoaiSp;
+    var dsNcc = (List<NhaCungCap>)ViewBag.ListNcc;
+    string username = User.Identity.Name;
+}
+
+@if (await CheckRoleInstance.CheckViewProductByUser(username))
+{
+    <div class="content-wrapper">
+        <div class="container-fluid">
+            <div class="row ">
+
+               
+                <div class="col-md-10 " style="margin-top:10px">
+                    <!-- Tìm kiếm -->
+                    <form asp-action="Index" method="get" id="formSearch">
+                        <div class="col-md-12">
+                            <div class="input-group">
+                                <div style="margin-left:-6px">
+                                    <a class="btn btn-primary" id="showPopoverButton" style="margin-right:10px">
+                                        Tìm kiếm nâng cao
+                                    </a>
+                                </div>
+                                
+                                    <div class="input-group-prepend">
+                                    <button id="button-addon8" type="submit" class="btn btn-danger" ><i class="fa fa-search"></i></button>
+                                    </div>
+                                <input name="searchTen" value="@ViewBag.searchTen" placeholder="Nhập từ bạn cần tìm?" aria-describedby="button-addon8" class="form-control">
+                               
+                                @* <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search" >
+                                <div class="input-group-append">
+                                    <button class="btn btn-navbar" type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                   </div> *@
+
+                                <a href="~/Admin/Product" class="btn btn-secondary" style="margin-left:20px"><i class="fa fa-history"></i></a>
+                            </div>
+                        </div>
+
+                        <!-- Tìm kiếm nâng cao -->
+                        <div id="popover" class="hidden" style="display: @( ViewBag.lsp != null ||
+                                                                    ViewBag.lsp != null ||
+                                                                    ViewBag.ncc != null ||
+                                                                    ViewBag.loai != null ||
+                                                                    ViewBag.minban != 0 ||
+                                                                    ViewBag.maxban != 5000000 ||
+                                                                    ViewBag.minnhap != 0 ||
+                                                                    ViewBag.maxnhap != 5000000 ? "block" : "none")">
+                            <div class="input-group">
+                                <div style="padding: .25rem 1rem">
+                                    <label>Danh mục: </label>
+                                    <select class="form-control" name="lsp">
+                                        <option style="display:none" value=""></option>
+                                        @if (dsLoaiSp != null)
+                                        {
+                                            @foreach (var item in dsLoaiSp)
+                                            {
+                                                @if (ViewBag.lsp == item.TenLoaiSP)
+                                                {
+                                                    <option value="@item.TenLoaiSP" selected>@item.TenLoaiSP</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@item.TenLoaiSP">@item.TenLoaiSP</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+
+                                <div style="padding: .25rem 1rem">
+                                    <label>Nhà cung cấp: </label>
+                                    <select class="form-control" name="ncc">
+                                        <option style="display:none" value=""></option>
+                                        @if (dsNcc != null)
+                                        {
+                                            @foreach (var item in dsNcc)
+                                            {
+                                                @if (ViewBag.ncc == item.TenNCC)
+                                                {
+                                                    <option value="@item.TenNCC" selected>@item.TenNCC</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@item.TenNCC">@item.TenNCC</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+
+                                <div style="padding: .25rem 1rem">
+                                    <label>Giống loài: </label>
+                                    <select class="form-control" name="loai">
+                                        <option style="display:none" value=""></option>
+                                        @foreach (Animal animal in Enum.GetValues(typeof(Animal)))
+                                        {
+                                            @if (ViewBag.loai == animal.ToString())
+                                            {
+                                                <option value="@animal" selected>@animal</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@animal">@animal</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <div class="slider" style="padding: .25rem 1rem">
+                                        <label>Khoảng giá nhập: </label>
+                                        <div id="price-range1"></div>
+                                        <div></div>
+                                        <div id="price-values1">
+                                            <input name="minnhap" readonly style="width:95px" id="min-price1" type="text" value="@ViewBag.minnhap.ToString("N0")">
+                                            <input name="maxnhap" readonly style="width:95px" id="max-price1" type="text" value="@(ViewBag.maxnhap != 0 ? ViewBag.maxnhap.ToString("N0") : "5,000,000")">
+                                        </div>
+                                    </div>
+
+                                    <div class="slider" style="padding: .25rem 1rem">
+                                        <label>Khoảng giá bán: </label>
+                                        <div id="price-range2"></div>
+                                        <div></div>
+                                        <div id="price-values2">
+                                            <input name="minban" readonly style="width:95px" id="min-price2" type="text" value="@ViewBag.minban.ToString("N0")">
+                                            <input name="maxban" readonly style="width:95px" id="max-price2" type="text" value="@(ViewBag.maxban != 0 ? ViewBag.maxban.ToString("N0") : "5,000,000")">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="col-md-2 flex justify-content-end" style="margin-top:10px">
+                    @if (await CheckRoleInstance.CheckAddProductByUser(username))
+                    {
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                            <i class="fas fa-plus"></i> Thêm mới
+                        </button>
+                    }
+
+                </div>
+               
+            </div>
+
+            <br />
+
+
+            
+
+            <!-- Table -->
+            <div class="row row--top-20">
+                <div class="col-md-12">
+                    <div class="table-container">
+                        <table class="table">
+                            <thead class="" style="text-align: center;color: #fff;background-color: #007BFF;border-color: #007BFF;">
+                                <tr>
+                                    <th class="">Tên sản phẩm</th>
+                                    <th class="">số lượng</th>
+                                    <th class="">Ảnh</th>
+                                    <th class="">Loài</th>
+                                    <th class="">Giá nhập</th>
+                                    <th class="">Giá bán</th>
+                                    <th class="">Loại sản phẩm</th>
+                                    <th class="">Nhà cung cấp</th>
+                                    <th class=""></th>
+                                </tr>
+                            </thead>
+                            <tbody class="table__tbody" style="text-align:center">
+                                @foreach (var items in Model)
+                                {
+                                    <tr class="table-row table-row--chris">
+
+                                        <td data-column="TenSP" class="table-row__td">
+                                            <p>@items.TenSP</p>
+                                        </td>
+                                        <td class="table-row__td">
+                                            <p>@items.SoLuongTon</p>
+                                        </td>
+                                        <td class="table-row__td">
+                                            <p><img src="@Url.Content("~/Images/" + items.Anh)" alt="@items.TenSP" width="100" height="100" /></p>
+                                        </td>
+                                        <td class="table-row__td">
+                                            <p>@items.GiongLoai</p>
+                                        </td>
+                                        <td class="table-row__td">
+                                            <p>@items.GiaNhap.ToString("#,##0.###") VNĐ</p>
+                                        </td>
+                                        <td class="table-row__td">
+                                            <p>@items.GiaBan.ToString("#,##0.###") VNĐ</p>
+                                        </td>
+                                        <td class="table-row__td">
+                                            <p>@items.LoaiSanPham</p>
+                                        </td>
+                                        <td class="table-row__td">
+                                            <p>@items.NhaCungCap</p>
+                                        </td>
+                                        <td class="table-row__td">
+
+                                            @if (await CheckRoleInstance.CheckEditProductByUser(username))
+                                            {
+                                                <a href="@Url.Action("Edit", "Product", new { @id = items.MaSP})">
+                                                    <svg version="1.1" class="table-row__edit" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512.001 512.001" style="enable-background:new 0 0 512.001 512.001;" xml:space="preserve" data-toggle="tooltip" data-placement="bottom" title="Edit"><g>	<g>		<path d="M496.063,62.299l-46.396-46.4c-21.2-21.199-55.69-21.198-76.888,0l-18.16,18.161l123.284,123.294l18.16-18.161    C517.311,117.944,517.314,83.55,496.063,62.299z" style="fill: rgb(1, 185, 209);"></path>	</g></g><g>	<g>
+                                                    <path d="M22.012,376.747L0.251,494.268c-0.899,4.857,0.649,9.846,4.142,13.339c3.497,3.497,8.487,5.042,13.338,4.143    l117.512-21.763L22.012,376.747z" style="fill: rgb(1, 185, 209);"></path>	</g></g><g>	<g>		<polygon points="333.407,55.274 38.198,350.506 161.482,473.799 456.691,178.568   " style="fill: rgb(1, 185, 209);"></polygon>	</g></g><g></g><g></g><g></g>
+                                                    <g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
+                                                                                                                                    </svg>
+                                                </a>
+                                            }
+
+                                            @if (await CheckRoleInstance.CheckDeleteProductByUser(username))
+                                            {
+                                                <a href="@Url.Action("Delete", "Product", new { @maSP = items.MaSP })" onclick="return confirm('Bạn có muốn xóa sản phẩm không?')">
+                                                    <svg data-toggle="tooltip" data-placement="bottom" title="Delete" version="1.1" class="table-row__bin" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve"><g>	<g>		<path d="M436,60h-90V45c0-24.813-20.187-45-45-45h-90c-24.813,0-45,20.187-45,45v15H76c-24.813,0-45,20.187-45,45v30    c0,8.284,6.716,15,15,15h16.183L88.57,470.945c0.003,0.043,0.007,0.086,0.011,0.129C90.703,494.406,109.97,512,133.396,512    h245.207c23.427,0,42.693-17.594,44.815-40.926c0.004-0.043,0.008-0.086,0.011-0.129L449.817,150H466c8.284,0,15-6.716,15-15v-30    C481,80.187,460.813,60,436,60z M196,45c0-8.271,6.729-15,15-15h90c8.271,0,15,6.729,15,15v15H196V45z M393.537,468.408    c-0.729,7.753-7.142,13.592-14.934,13.592H133.396c-7.792,0-14.204-5.839-14.934-13.592L92.284,150h327.432L393.537,468.408z     M451,120h-15H76H61v-15c0-8.271,6.729-15,15-15h105h150h105c8.271,0,15,6.729,15,15V120z" style="fill: rgb(158, 171, 180);"></path>	</g></g><g>	<g>		<path d="M256,180c-8.284,0-15,6.716-15,15v212c0,8.284,6.716,15,15,15s15-6.716,15-15V195C271,186.716,264.284,180,256,180z" style="fill: rgb(158, 171, 180);"></path>	</g></g><g>	<g>		<path d="M346,180c-8.284,0-15,6.716-15,15v212c0,8.284,6.716,15,15,15s15-6.716,15-15V195C361,186.716,354.284,180,346,180z" style="fill: rgb(158, 171, 180);"></path>	</g></g><g>	<g>		<path d="M166,180c-8.284,0-15,6.716-15,15v212c0,8.284,6.716,15,15,15s15-6.716,15-15V195C181,186.716,174.284,180,166,180z" style="fill: rgb(158, 171, 180);"></path>	</g></g><g></g><g></g><g></g><g></g><g></g><g></g>
+                                                    <g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
+                                                                                                                                    </svg>
+                                                </a>
+                                            }
+
+                                        </td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Thanh phân trang -->
+                    <div class="col-sm-12 " style="display: flex; justify-content: space-between;">
+                        <div class="dataTables_paginate paging_simple_numbers" id="example1_paginate">
+                            <ul class="pagination">
+                                @if (Model.HasPreviousPage)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", "Product", new { searchTen = ViewBag.searchTen, lsp = ViewBag.lsp, ncc = ViewBag.ncc, loai = ViewBag.loai, minban = ViewBag.minban, maxban = ViewBag.maxban, minnhap = ViewBag.minnhap, maxnhap = ViewBag.maxnhap, page = Model.PageNumber - 1 })"><i class="fa fa-angle-left"></i></a>
+                                    </li>
+
+                                }
+
+                                <li class="page-item @(1 == ViewBag.Page ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("Index", "Product", new { searchTen = ViewBag.searchTen, lsp = ViewBag.lsp, ncc = ViewBag.ncc, loai = ViewBag.loai, minban = ViewBag.minban, maxban = ViewBag.maxban, minnhap = ViewBag.minnhap, maxnhap = ViewBag.maxnhap, page = 1 })">1</a>
+                                </li>
+
+                                @if (Model.PageNumber > 3)
+                                {
+                                    <li class="page-item">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                }
+
+                                @for (int i = Model.PageNumber - 1; i <= Model.PageNumber + 1; i++)
+                                {
+                                    if (i > 1 && i < Model.PageCount)
+                                    {
+                                        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                                            <a class="page-link" href="@Url.Action("Index", "Product", new { searchTen = ViewBag.searchTen, lsp = ViewBag.lsp, ncc = ViewBag.ncc, loai = ViewBag.loai, minban = ViewBag.minban, maxban = ViewBag.maxban, minnhap = ViewBag.minnhap, maxnhap = ViewBag.maxnhap, page = i })">@i</a>
+                                        </li>
+                                    }
+                                }
+
+                                @if (Model.PageNumber < Model.PageCount - 2)
+                                {
+                                    <li class="page-item">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                }
+
+                                @if (Model.PageCount > 1)
+                                {
+                                    <li class="page-item @(Model.PageCount == ViewBag.Page ? "active" : "") ">
+                                        <a class="page-link" href="@Url.Action("Index", "Product", new { searchTen = ViewBag.searchTen, lsp = ViewBag.lsp, ncc = ViewBag.ncc, loai = ViewBag.loai, minban = ViewBag.minban, maxban = ViewBag.maxban, minnhap = ViewBag.minnhap, maxnhap = ViewBag.maxnhap, page = Model.PageCount })">@Model.PageCount</a>
+                                    </li>
+                                }
+
+                                @if (Model.HasNextPage)
+                                {
+
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", "Product", new { searchTen = ViewBag.searchTen, lsp = ViewBag.lsp, ncc = ViewBag.ncc, loai = ViewBag.loai, minban = ViewBag.minban, maxban = ViewBag.maxban, minnhap = ViewBag.minnhap, maxnhap = ViewBag.maxnhap, page = Model.PageNumber + 1 })"><i class="fa fa-angle-right"></i></a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                        <p>Danh sách từ @ViewBag.PageStartItem đến @ViewBag.PageEndItem trên tổng số @ViewBag.TotalItemCount sản phẩm</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal create -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 700px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Thêm sản phẩm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="wrapper">
+                            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                                <div class="tabs-wrapper">
+                                    <ul id="scroller" class="nav nav-tabs">
+                                        <li class="active"><a data-toggle="tab" href="#home">Sản phẩm</a></li>
+                                        <li><a data-toggle="tab" href="#menu1">Mô tả</a></li>
+                                        <li><a data-toggle="tab" href="#menu2">Ảnh</a></li>
+
+                                    </ul>
+                                </div>
+                                <div class="tab-content">
+                                    <div id="home" class="tab-pane fade active show">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label for="TenSp" class="control-label">Tên sản phẩm:</label>
+                                                    <input type="text" class="form-control" id="TenSp" placeholder="Nhập tên sản phẩm" name="TenSp" required>
+                                                    <div class="valid-feedback">Valid.</div>
+                                                    <div class="invalid-feedback">Vui lòng điền vào trường này.</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="GiaBan" class="control-label">Giá bán:</label>
+                                                    <input type="number" class="form-control" placeholder="Nhập giá bán" name="GiaBan" min="1" required>
+                                                    <div class="invalid-feedback">Vui lòng điền vào trường này.</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="GiaNhap" class="control-label">Giá nhập:</label>
+                                                    <input type="number" class="form-control" placeholder="Nhập giá nhập" name="GiaNhap" min="1" required>
+                                                    <div class="invalid-feedback">Vui lòng điền vào trường này.</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="SoLuongTon" class="control-label">Số lượng tồn:</label>
+                                                    <input type="number" class="form-control" placeholder="Nhập số lượng tồn" name="SoLuongTon" required>
+                                                    <div class="invalid-feedback">Vui lòng điền vào trường này.</div>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label for="GiongLoai" class="control-label">Giống loài:</label>
+                                                    <select class="form-control" name="GiongLoai" required>
+                                                        <option style="display:none" value=""></option>
+                                                        @foreach (Animal animal in Enum.GetValues(typeof(Animal)))
+                                                        {
+                                                            <option value="@animal">@animal</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="LoaiSp" class="control-label">Danh mục:</label>
+                                                    <select class="form-control" name="LoaiSp" required>
+                                                        <option style="display:none" value=""></option>
+                                                        @if (dsLoaiSp != null)
+                                                        {
+                                                            @foreach (var item in dsLoaiSp)
+                                                            {
+                                                                <option value="@item.TenLoaiSP">@item.TenLoaiSP</option>
+                                                            }
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Ncc" class="control-label">Nhà cung cấp:</label>
+                                                    <select class="form-control" name="Ncc" required>
+                                                        <option style="display:none" value=""></option>
+                                                        @if (dsNcc != null)
+                                                        {
+                                                            @foreach (var item in dsNcc)
+                                                            {
+                                                                <option value="@item.TenNCC">@item.TenNCC</option>
+                                                            }
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="menu1" class="tab-pane fade">
+                                        <div class="form-group">
+                                            <label for="MoTa" class="control-label">Mô tả sản phẩm:</label>
+                                            <textarea class="form-control" id="MoTa" placeholder="Nhập mô tả sản phẩm" name="MoTa" required></textarea>
+                                            <div class="invalid-feedback">Vui lòng điền vào trường này.</div>
+                                        </div>
+                                    </div>
+                                    <div id="menu2" class="tab-pane fade">
+                                        <div class="form-group">
+                                            <label for="image1" class="control-label">Ảnh:</label>
+                                            <input type="file" class="form-control" name="image1" id="image1" required>
+                                            <div class="invalid-feedback">Vui lòng điền vào trường này.</div>
+                                            <img id="preview1" class="img-responsive chain" style="width: 20%; display: none" src="#" alt=" ">
+                                            <script>
+                                                image1.onchange = evt1 => {
+                                                    const [file1] = image1.files;
+                                                    if (file1) {
+                                                        preview1.src = URL.createObjectURL(file1);
+                                                        $("#preview1").show();
+                                                    }
+                                                };
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <input type="submit" value="Create" class="btn btn-primary" />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Open modal create -->
+    <script>
+        jQuery(document).ready(function ($) {
+            // Function to set the active tab
+            function setActiveTab(tabId) {
+                $("ul.nav-tabs li").removeClass("active");
+                $("ul.nav-tabs li a[data-toggle='tab'][href='" + tabId + "']").parent().addClass("active");
+            }
+
+            // Handle tab click
+            $('ul.nav-tabs li a[data-toggle="tab"]').on('click', function (e) {
+                var tabId = $(this).attr("href");
+                setActiveTab(tabId);
+            });
+        });
+    </script>
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('MoTa');
+    </script>
+
+    <!-- Slider -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script>
+        $(document).ready(function () {
+            const minPriceInput1 = $("#min-price1");
+            const maxPriceInput1 = $("#max-price1");
+            const priceRange1 = $("#price-range1");
+
+            const minPriceInput2 = $("#min-price2");
+            const maxPriceInput2 = $("#max-price2");
+            const priceRange2 = $("#price-range2");
+
+            // Initialize the price range slider
+            priceRange1.slider({
+                range: true,
+                min: 0,
+                max: 5000000,
+                values: [@ViewBag.minnhap, @ViewBag.maxnhap],
+                slide: function (event, ui) {
+                    minPriceInput1.val(ui.values[0].toLocaleString('en-US'));
+                    maxPriceInput1.val(ui.values[1].toLocaleString('en-US'));
+                }
+            });
+
+            // Initialize the price range slider
+            priceRange2.slider({
+                range: true,
+                min: 0,
+                max: 5000000,
+                values: [@ViewBag.minban, @ViewBag.maxban],
+                slide: function (event, ui) {
+                    minPriceInput2.val(ui.values[0].toLocaleString('en-US'));
+                    maxPriceInput2.val(ui.values[1].toLocaleString('en-US'));
+                }
+            });
+        });
+    </script>
+
+    <!-- Chuyển giá từ string thành decimal trước khi submit-->
+    <script>
+        document.getElementById('formSearch').addEventListener('submit', function () {
+            var minbanInput1 = document.getElementById('min-price1');
+            var maxbanInput1 = document.getElementById('max-price1');
+            var minbanInput2 = document.getElementById('min-price2');
+            var maxbanInput2 = document.getElementById('max-price2');
+
+            // Chuyển giá trị thành số decimal
+            var minbanValue1 = parseFloat(minbanInput1.value.replace(/,/g, ''));
+            var maxbanValue1 = parseFloat(maxbanInput1.value.replace(/,/g, ''));
+            var minbanValue2 = parseFloat(minbanInput2.value.replace(/,/g, ''));
+            var maxbanValue2 = parseFloat(maxbanInput2.value.replace(/,/g, ''));
+
+            // Cập nhật giá trị trong các input
+            minbanInput1.value = minbanValue1;
+            maxbanInput1.value = maxbanValue1;
+            minbanInput2.value = minbanValue2;
+            maxbanInput2.value = maxbanValue2;
+        });
+    </script>
+
+    <!-- Avanced search -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const showPopoverButton = document.getElementById("showPopoverButton");
+            const popover = document.getElementById("popover");
+            const inputField = document.getElementById("textInput");
+
+            // Hiển thị popover khi nút được nhấn
+            showPopoverButton.addEventListener("click", function (event) {
+                event.stopPropagation(); // Ngăn chặn sự kiện click từ việc khu vực này lan ra bên ngoài
+
+                if (popover.style.display === "block") {
+                    popover.style.display = "none";
+                } else {
+                    popover.style.display = "block";
+                }
+            });
+
+            // Đóng popover khi click ra ngoài
+            document.addEventListener("click", function (event) {
+                if (popover.style.display === "block" && event.target !== showPopoverButton) {
+                    popover.style.display = "none";
+                }
+            });
+
+            // Ngăn chặn sự kiện click trong popover từ tắt popover
+            popover.addEventListener("click", function (event) {
+                event.stopPropagation();
+            });
+
+            // Ngăn chặn sự kiện click trong <input> từ tắt popover
+            inputField.addEventListener("click", function (event) {
+                event.stopPropagation();
+            });
+        });
+    </script>
+}
+
+else
+
+{
+    {
+        Layout = null;
+    }
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Access Denied</title>
+        <script>
+            function goBack() {
+                var url = '/Home/Index';
+                window.location.href = url;
+            }
+        </script>
+    </head>
+    <body>
+        <div style="text-align: center; padding: 50px;">
+            <h1>Access Denied</h1>
+            <p>You do not have permission to access this page.</p>
+            <button onclick="goBack()">Go Home</button>
+        </div>
+    </body>
+    </html>
+}
+

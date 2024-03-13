@@ -1,0 +1,82 @@
+﻿<div class="left-sidebar">
+	
+	<form asp-action="Index" asp-controller="Category" method="get">
+		<div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4">
+			
+			<h2>Loại sản phẩm</h2>
+			<div class="panel-group category-products" id="accordian">
+				<vc:categoryes></vc:categoryes>
+
+				<!-- Thêm checkbox cho các tùy chọn khác nếu cần -->
+			</div>
+			<div class="Supplier">
+				<!--Supplier-->
+				<h2>Nhà cung cấp</h2>
+					<vc:supplier></vc:supplier>		
+			</div><!--/Supplier-->
+			<div class="species">
+				<!--species-->
+				<h2>Giống loài</h2>
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" id="cho" name="loai" value="Chó" />
+					<label class="form-check-label" for="cho">Chó</label>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" id="meo" name="loai" value="Mèo" />
+					<label class="form-check-label" for="meo">Mèo</label>
+				</div>
+			</div><!--/species-->
+			<div class="price-range">
+				<!--price-range-->
+				<h2>Giá bán</h2>		
+                @* <div class="well text-center">
+                    <input type="text" class="span2" data-slider-min="0" data-slider-max="600000" data-slider-step="1000" data-slider-value="[45000]" id="sl2" name="maxban"><br />                
+                    <b class="pull-left" id="min-price" name="minban">0</b>
+					<b class="pull-right" id="max-price" name="maxban">600.000 VNĐ</b>
+                </div> *@
+                <div class="well text-center">
+					<input type="text" class="span2" value="" data-slider-min="0" data-slider-max="600000" data-slider-step="1000" data-slider-value="[25000,450000]" id="sl2"><br />
+                    <input type="hidden" id="minban" name="minban" value="0">
+					<input type="hidden" id="maxban" name="maxban" value="600.000 VNĐ">
+                    <b class="pull-left" id="min-price">0 đ</b>
+					<b class="pull-right " id="max-price">600.000 đ</b>
+                </div>
+			</div><!--/price-range-->
+			<div class="input-group" style="display:flex;margin-bottom: 10px;">
+				<input id="TimKiem" type="text" name="searchTen" placeholder="Nhập từ bạn cần tìm?" aria-describedby="button-addon1" class="form-control border-0 bg-light">
+				<div class="input-group-append">
+					<button id="button-addon1" class="btn btn-link text-primary" type="submit" style="background: #FE980F;color: white;"><i class="fa fa-search"></i></button>
+				</div>
+			</div>
+		</div>
+	</form>
+	<!-- <div class="shipping text-center">
+		
+		<img src="~/Images/hot-sam-do-cho-thu-cung-voi-uu-dai-giam-nua-gia-0.jpeg" style="width:260px"  />
+	</div> -->
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Khởi tạo thanh trượt
+        $("#sl2").slider({
+            tooltip: 'always'
+        });
+
+        // Sự kiện khi thanh trượt thay đổi giá trị
+        $("#sl2").on("slide", function (slideEvt) {
+            // Lấy giá trị min và max từ thanh trượt
+            var minban = slideEvt.value[0];
+            var maxban = slideEvt.value[1];
+
+            // Cập nhật giá trị minban và maxban trong trường ẩn
+            $("#minban").val(minban);
+            $("#maxban").val(maxban);
+
+            // Cập nhật giá trị minban và maxban trong thẻ <b>
+            $("#min-price").text("₫ " + minban.toLocaleString());
+            $("#max-price").text("₫ " + maxban.toLocaleString());
+        });
+    });
+</script>

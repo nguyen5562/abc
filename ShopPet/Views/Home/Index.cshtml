@@ -1,0 +1,113 @@
+﻿@model X.PagedList.IPagedList<SanPham>
+@using X.PagedList.Mvc.Core;
+@{
+	ViewBag.Title = "Home";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="col-sm-3">
+	@* @Html.Partial("_SidebarParti"); *@
+	@{
+		await Html.RenderPartialAsync("~/Views/Shared/_SidebarParti.cshtml");
+	}
+</div>
+<div class="col-sm-9 padding-right">
+	<div class="features_items">
+		<!--features_items-->
+		<h2 class="title text-center">Features Items</h2>
+		<div class="bg-white p-5 rounded shadow">
+
+			@* 	<form asp-action="search" asp-controller="Home">
+					<div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4">
+						<div class="input-groupd-flex">
+						<input id="TimKiem" type="text" name="tenSP" placeholder="Nhập từ bạn cần tìm?" aria-describedby="button-addon1" class="form-control border-0 bg-light">
+							<div class="input-group-append">
+								<button id="button-addon1"  class="btn btn-link text-primary"><i class="fa fa-search"></i></button>
+							</div>
+						</div>
+					</div>
+				</form> *@
+
+		</div>
+		@foreach(var item in Model){
+		<div class="col-sm-4">
+			
+			<div class="product-image-wrapper">
+					
+				<div class="single-products">
+						<a asp-action="Details" asp-controller="Product" asp-route-MaSP="@item.MaSP">
+							<div class="productinfo text-center" style="height: 500px;">
+								<img src="@Url.Content("~/Images/" + item.Anh)" alt="@item.TenSP" style="height: 300px;" />
+							<h2>@item.GiaBan.ToString("#,##0.###") đ</h2>
+						<p>@item.TenSP</p>
+					<a class="btn btn-default add-to-cart" asp-action="Add" asp-controller="Cart" asp-route-MaSP="@item.MaSP"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+					</div>
+						</a>
+				</div>	
+			</div>
+				
+		</div>
+		}
+		<div class="dataTables_paginate paging_simple_numbers" id="example1_paginate">
+			<ul class="pagination">
+				@if (Model.HasPreviousPage)
+				{
+					<li class="page-item">
+						<a class="page-link" href="@Url.Action("Index", new { lsp = ViewBag.lsp, page = Model.PageNumber - 1 })"><i class="fa fa-angle-left"></i></a>
+					</li>
+
+				}
+
+				<li class="page-item @(1 == ViewBag.Page ? "active" : "")">
+					<a class="page-link" href="@Url.Action("Index", new { lsp = ViewBag.lsp, page = 1 })">1</a>
+				</li>
+
+				@if (Model.PageNumber > 3)
+				{
+					<li class="page-item">
+						<span class="page-link">...</span>
+					</li>
+				}
+
+				@for (int i = Model.PageNumber - 1; i <= Model.PageNumber + 1; i++)
+				{
+					if (i > 1 && i < Model.PageCount)
+					{
+						<li class="page-item @(i == Model.PageNumber ? "active" : "")">
+							<a class="page-link" href="@Url.Action("Index", new { lsp = ViewBag.lsp, page = i })">@i</a>
+						</li>
+					}
+				}
+
+				@if (Model.PageNumber < Model.PageCount - 2)
+				{
+					<li class="page-item">
+						<span class="page-link">...</span>
+					</li>
+				}
+
+				@if (Model.PageCount > 1)
+				{
+					<li class="page-item @(Model.PageCount == ViewBag.Page ? "active" : "") ">
+						<a class="page-link" href="@Url.Action("Index", new { lsp = ViewBag.lsp, page = Model.PageCount })">@Model.PageCount</a>
+					</li>
+				}
+
+				@if (Model.HasNextPage)
+				{
+
+					<li class="page-item">
+						<a class="page-link" href="@Url.Action("Index", new { lsp = ViewBag.lsp, page = Model.PageNumber + 1 })"><i class="fa fa-angle-right"></i></a>
+					</li>
+				}
+			</ul>
+		</div>
+	</div><!--features_items-->
+
+	
+	<div class="recommended_items">
+		<!--recommended_items-->
+		<h2 class="title text-center">recommended items</h2>
+		@await Component.InvokeAsync("SimilarProduct")
+	</div><!--/recommended_items-->
+
+</div>

@@ -1,0 +1,404 @@
+﻿@model AppRole
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Thêm mới quyền</h1>
+                </div>
+                @*<div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">Blank Page</li>
+                </ol>
+                </div>*@
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="card">
+            @*<div class="card-header">
+            <h3 class="card-title">Title</h3>
+
+            <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+            <i class="fas fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+            <i class="fas fa-times"></i>
+            </button>
+            </div>
+            </div>*@
+            <div class="card-body">
+                <form asp-action="Create" asp-controller="Role" method="post">
+                    @*Form nhập*@
+                    @Html.ValidationSummary(false)
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        <label asp-for="Name">Tên quyền</label>
+                        <input asp-for="Name" class="form-control" />
+                    </div>
+
+                    @*Tích các quyền*@
+                    <div class="form-group">
+                        <div><label>Quyền truy cập </label></div>
+                        <div class="icheck-primary d-inline" style="margin-right: 130px;">
+                            <input type="checkbox" asp-for="AccessAdmin" />
+                            <label asp-for="AccessAdmin" class="control-label">Admin</label>
+                        </div>
+                        <div class="icheck-primary d-inline">
+                            <input type="checkbox" asp-for="AccessUser" checked disabled />
+                            <label asp-for="AccessUser" class="control-label">User</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div><label>Sản phẩm</label></div>
+                        <div class="icheck-primary d-inline" style="margin-right: 70px;">
+                            <input type="checkbox" asp-for="ViewProduct" class="product-checkbox" id="ViewProduct" />
+                            <label asp-for="ViewProduct" class="control-label">Xem sản phẩm</label>
+                        </div>
+                        <div class="icheck-primary d-inline" style="margin-right: 140px;">
+                            <input type="checkbox" asp-for="AddProduct" class="product-checkbox" />
+                            <label asp-for="AddProduct" class="control-label">Thêm sản phẩm</label>
+                        </div>
+                        <div class="icheck-primary d-inline" style="margin-right: 70px;">
+                            <input type="checkbox" asp-for="EditProduct" class="product-checkbox" />
+                            <label asp-for="EditProduct" class="control-label">Sửa sản phẩm</label>
+                        </div>
+                        <div class="icheck-primary d-inline" style="margin-right: 70px;">
+                            <input type="checkbox" asp-for="DeleteProduct" class="product-checkbox" />
+                            <label asp-for="DeleteProduct" class="control-label">Xóa sản phẩm</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div><label>Nhà cung cấp</label></div>
+                        <div class="icheck-primary d-inline" style="margin-right: 42px;">
+                            <input type="checkbox" asp-for="ViewSupplier" class="supplier-checkbox" id="ViewSupplier" />
+                            <label asp-for="ViewSupplier" class="control-label">Xem nhà cung cấp</label>
+                        </div>
+                        <div class="icheck-primary d-inline" style="margin-right: 114px;">
+                            <input type="checkbox" asp-for="AddSupplier" class="supplier-checkbox" />
+                            <label asp-for="AddSupplier" class="control-label">Thêm nhà cung cấp</label>
+                        </div>
+                        <div class="icheck-primary d-inline" style="margin-right: 46px;">
+                            <input type="checkbox" asp-for="EditSupplier" class="supplier-checkbox" />
+                            <label asp-for="EditSupplier" class="control-label">Sửa nhà cung cấp</label>
+                        </div>
+                        <div class="icheck-primary d-inline" style="margin-right: 70px;">
+                            <input type="checkbox" asp-for="DeleteSupplier" class="supplier-checkbox" />
+                            <label asp-for="DeleteSupplier" class="control-label">Xóa nhà cung cấp</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div><label>Danh mục</label></div>
+                        <div class="icheck-primary d-inline" style="margin-right: 70px;">
+                            <input type="checkbox" asp-for="ViewCategory" class="category-checkbox" id="ViewCategory" />
+                            <label asp-for="ViewCategory" class="control-label">Xem danh mục</label>
+                        </div>
+                        <div class="icheck-primary d-inline" style="margin-right: 135px;">
+                            <input type="checkbox" asp-for="AddCategory" class="category-checkbox" />
+                            <label asp-for="AddCategory" class="control-label">Thêm danh mục</label>
+                        </div>
+                        <div class="icheck-primary d-inline" style="margin-right: 70px;">
+                            <input type="checkbox" asp-for="EditCategory" class="category-checkbox" />
+                            <label asp-for="EditCategory" class="control-label">Sửa danh mục</label>
+                        </div>
+                        <div class="icheck-primary d-inline" style="margin-right: 70px;">
+                            <input type="checkbox" asp-for="DeleteCategory" class="category-checkbox" />
+                            <label asp-for="DeleteCategory" class="control-label">Xóa danh mục</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div><label>Hóa đơn</label></div>
+                        <div class="icheck-primary d-inline" style="margin-right: 80px;">
+                            <input type="checkbox" asp-for="ViewOrder" class="order-checkbox" id="ViewOrder" />
+                            <label asp-for="ViewOrder" class="control-label">Xem hóa đơn</label>
+                        </div>
+                        <div class="icheck-primary d-inline" style="margin-right: 70px;">
+                            <input type="checkbox" asp-for="EditOrder" class="order-checkbox" />
+                            <label asp-for="EditOrder" class="control-label">Sửa hóa đơn</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div><label>Quyền</label></div>
+                        <div class="icheck-primary d-inline" style="margin-right: 95px;">
+                            <input type="checkbox" asp-for="ViewRole" class="role-checkbox" id="ViewRole" />
+                            <label asp-for="ViewRole" class="control-label">Xem quyền</label>
+                        </div>
+                        <div class="icheck-primary d-inline" style="margin-right: 166px;">
+                            <input type="checkbox" asp-for="AddRole" class="role-checkbox" />
+                            <label asp-for="AddRole" class="control-label">Thêm quyền</label>
+                        </div>
+                        <div class="icheck-primary d-inline " style="margin-right: 100px;">
+                            <input type="checkbox" asp-for="EditRole" class="role-checkbox" />
+                            <label asp-for="EditRole" class="control-label">Sửa quyền</label>
+                        </div>
+                        <div class="icheck-primary d-inline" style="margin-right: 70px;">
+                            <input type="checkbox" asp-for="DeleteRole" class="role-checkbox" />
+                            <label asp-for="DeleteRole" class="control-label">Xóa quyền</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div><label>Tài khoản</label></div>
+                        <div class="icheck-primary d-inline" style="margin-right: 70px;">
+                            <input type="checkbox" asp-for="ViewAccount" class="account-checkbox" id="ViewAccount" />
+                            <label asp-for="ViewAccount" class="control-label">Xem tài khoản</label>
+                        </div>
+                        <div class="icheck-primary d-inline" style="margin-right: 142px;">
+                            <input type="checkbox" asp-for="AddAccount" class="account-checkbox" />
+                            <label asp-for="AddAccount" class="control-label">Thêm tài khoản</label>
+                        </div>
+                        <div class="icheck-primary d-inline" style="margin-right: 78px;">
+                            <input type="checkbox" asp-for="EditAccount" class="account-checkbox" />
+                            <label asp-for="EditAccount" class="control-label">Sửa tài khoản</label>
+                        </div>
+                        <div class="icheck-primary d-inline" style="margin-right: 70px;">
+                            <input type="checkbox" asp-for="DeleteAccount" class="account-checkbox" />
+                            <label asp-for="DeleteAccount" class="control-label">Xóa tài khoản</label>
+                        </div>
+                    </div>
+
+                    @*<div class="form-group">
+                    <div><label>Nhóm người dùng</label></div>
+                    <div class="icheck-primary d-inline">
+                    <input type="checkbox" asp-for="ViewGroup" />
+                    <label asp-for="ViewGroup" class="control-label">Xem nhóm người dùng</label>
+                    </div>
+                    <div class="icheck-primary d-inline">
+                    <input type="checkbox" asp-for="AddGroup" />
+                    <label asp-for="AddGroup" class="control-label">Thêm nhóm người dùng</label>
+                    </div>
+                    <div class="icheck-primary d-inline">
+                    <input type="checkbox" asp-for="EditGroup" />
+                    <label asp-for="EditGroup" class="control-label">Sửa nhóm người dùng</label>
+                    </div>
+                    <div class="icheck-primary d-inline">
+                    <input type="checkbox" asp-for="DeleteGroup" />
+                    <label asp-for="DeleteGroup" class="control-label">Xóa nhóm người dùng</label>
+                    </div>
+                    </div>*@
+
+                    @*Submit*@
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">Thêm mới</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.card-body -->
+            @*<div class="card-footer">
+            Footer
+            </div>*@
+            <!-- /.card-footer-->
+        </div>
+        <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+<!-- Admin -->
+@*<script>
+    $(document).ready(function () {
+        // Kiểm tra trạng thái của checkbox "Xem sản phẩm" khi trang web được tải
+        checkAdminStatus();
+
+        // Hàm kiểm tra trạng thái của checkbox "Xem sản phẩm" và disabled các checkbox khác nếu cần
+        function checkAdminStatus() {
+            // Nếu checkbox "Xem sản phẩm" được chọn
+            if ($("#Admin1").prop("checked")) {
+                // Disabled tất cả các checkbox khác
+                $("#ViewProduct").prop("disabled", false);
+            } else {
+                // Bỏ disabled nếu checkbox "Xem sản phẩm" không được chọn
+                $("#ViewProduct").prop("disabled", true);
+                $("#ViewProduct").prop("checked", false);
+            }
+        }
+
+        // Lắng nghe sự kiện click trên checkbox "Xem sản phẩm"
+        $("#Admin1").click(function () {
+            // Gọi hàm kiểm tra trạng thái ngay lúc đó
+            checkAdminStatus();
+        });
+    });
+</script>*@
+
+<!-- Product -->
+<script>
+    $(document).ready(function () {
+        // Kiểm tra trạng thái của checkbox "Xem sản phẩm" khi trang web được tải
+        checkViewProductStatus();
+
+        // Hàm kiểm tra trạng thái của checkbox "Xem sản phẩm" và disabled các checkbox khác nếu cần
+        function checkViewProductStatus() {
+            // Nếu checkbox "Xem sản phẩm" được chọn
+            if ($("#ViewProduct").prop("checked")) {
+                // Disabled tất cả các checkbox khác
+                $(".product-checkbox").not("#ViewProduct").prop("disabled", false);
+            } else {
+                // Bỏ disabled nếu checkbox "Xem sản phẩm" không được chọn
+                $(".product-checkbox").not("#ViewProduct").prop("disabled", true);
+                $(".product-checkbox").not("#ViewProduct").prop("checked", false);
+            }
+        }
+
+        // Lắng nghe sự kiện click trên checkbox "Xem sản phẩm"
+        $("#ViewProduct").click(function () {
+            // Gọi hàm kiểm tra trạng thái ngay lúc đó
+            checkViewProductStatus();
+        });
+    });
+</script>
+
+<!-- Category -->
+<script>
+    $(document).ready(function () {
+        // Kiểm tra trạng thái của checkbox "Xem sản phẩm" khi trang web được tải
+        checkViewCategoryStatus();
+
+        // Hàm kiểm tra trạng thái của checkbox "Xem sản phẩm" và disabled các checkbox khác nếu cần
+        function checkViewCategoryStatus() {
+            // Nếu checkbox "Xem sản phẩm" được chọn
+            if ($("#ViewCategory").prop("checked")) {
+                // Disabled tất cả các checkbox khác
+                $(".category-checkbox").not("#ViewCategory").prop("disabled", false);
+            } else {
+                // Bỏ disabled nếu checkbox "Xem sản phẩm" không được chọn
+                $(".category-checkbox").not("#ViewCategory").prop("disabled", true);
+                $(".category-checkbox").not("#ViewCategory").prop("checked", false);
+            }
+        }
+
+        // Lắng nghe sự kiện click trên checkbox "Xem sản phẩm"
+        $("#ViewCategory").click(function () {
+            // Gọi hàm kiểm tra trạng thái ngay lúc đó
+            checkViewCategoryStatus();
+        });
+    });
+</script>
+
+<!-- Supplier -->
+<script>
+    $(document).ready(function () {
+        // Kiểm tra trạng thái của checkbox "Xem sản phẩm" khi trang web được tải
+        checkViewSupplierStatus();
+
+        // Hàm kiểm tra trạng thái của checkbox "Xem sản phẩm" và disabled các checkbox khác nếu cần
+        function checkViewSupplierStatus() {
+            // Nếu checkbox "Xem sản phẩm" được chọn
+            if ($("#ViewSupplier").prop("checked")) {
+                // Disabled tất cả các checkbox khác
+                $(".supplier-checkbox").not("#ViewSupplier").prop("disabled", false);
+            } else {
+                // Bỏ disabled nếu checkbox "Xem sản phẩm" không được chọn
+                $(".supplier-checkbox").not("#ViewSupplier").prop("disabled", true);
+                $(".supplier-checkbox").not("#ViewSupplier").prop("checked", false);
+            }
+        }
+
+        // Lắng nghe sự kiện click trên checkbox "Xem sản phẩm"
+        $("#ViewSupplier").click(function () {
+            // Gọi hàm kiểm tra trạng thái ngay lúc đó
+            checkViewSupplierStatus();
+        });
+    });
+</script>
+
+<!-- Order -->
+<script>
+    $(document).ready(function () {
+        // Kiểm tra trạng thái của checkbox "Xem sản phẩm" khi trang web được tải
+        checkViewOrderStatus();
+
+        // Hàm kiểm tra trạng thái của checkbox "Xem sản phẩm" và disabled các checkbox khác nếu cần
+        function checkViewOrderStatus() {
+            // Nếu checkbox "Xem sản phẩm" được chọn
+            if ($("#ViewOrder").prop("checked")) {
+                // Disabled tất cả các checkbox khác
+                $(".order-checkbox").not("#ViewOrder").prop("disabled", false);
+            } else {
+                // Bỏ disabled nếu checkbox "Xem sản phẩm" không được chọn
+                $(".order-checkbox").not("#ViewOrder").prop("disabled", true);
+                $(".order-checkbox").not("#ViewOrder").prop("checked", false);
+            }
+        }
+
+        // Lắng nghe sự kiện click trên checkbox "Xem sản phẩm"
+        $("#ViewOrder").click(function () {
+            // Gọi hàm kiểm tra trạng thái ngay lúc đó
+            checkViewOrderStatus();
+        });
+    });
+</script>
+
+<!-- Role -->
+<script>
+    $(document).ready(function () {
+        // Kiểm tra trạng thái của checkbox "Xem sản phẩm" khi trang web được tải
+        checkViewRoleStatus();
+
+        // Hàm kiểm tra trạng thái của checkbox "Xem sản phẩm" và disabled các checkbox khác nếu cần
+        function checkViewRoleStatus() {
+            // Nếu checkbox "Xem sản phẩm" được chọn
+            if ($("#ViewRole").prop("checked")) {
+                // Disabled tất cả các checkbox khác
+                $(".role-checkbox").not("#ViewRole").prop("disabled", false);
+            } else {
+                // Bỏ disabled nếu checkbox "Xem sản phẩm" không được chọn
+                $(".role-checkbox").not("#ViewRole").prop("disabled", true);
+                $(".role-checkbox").not("#ViewRole").prop("checked", false);
+            }
+        }
+
+        // Lắng nghe sự kiện click trên checkbox "Xem sản phẩm"
+        $("#ViewRole").click(function () {
+            // Gọi hàm kiểm tra trạng thái ngay lúc đó
+            checkViewRoleStatus();
+        });
+    });
+</script>
+
+<!-- Account -->
+<script>
+    $(document).ready(function () {
+        // Kiểm tra trạng thái của checkbox "Xem sản phẩm" khi trang web được tải
+        checkViewAccountStatus();
+
+        // Hàm kiểm tra trạng thái của checkbox "Xem sản phẩm" và disabled các checkbox khác nếu cần
+        function checkViewAccountStatus() {
+            // Nếu checkbox "Xem sản phẩm" được chọn
+            if ($("#ViewAccount").prop("checked")) {
+                // Disabled tất cả các checkbox khác
+                $(".account-checkbox").not("#ViewAccount").prop("disabled", false);
+            } else {
+                // Bỏ disabled nếu checkbox "Xem sản phẩm" không được chọn
+                $(".account-checkbox").not("#ViewAccount").prop("disabled", true);
+                $(".account-checkbox").not("#ViewAccount").prop("checked", false);
+            }
+        }
+
+        // Lắng nghe sự kiện click trên checkbox "Xem sản phẩm"
+        $("#ViewAccount").click(function () {
+            // Gọi hàm kiểm tra trạng thái ngay lúc đó
+            checkViewAccountStatus();
+        });
+    });
+</script>
+
+
+

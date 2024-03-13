@@ -1,0 +1,44 @@
+﻿@model ShopPet.Models.LoaiSanPham
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="content-wrapper">
+    <div class="container">
+        <div class="row row--top-40">
+            <div class="col-md-12">
+                <h2 class="row__title">Sửa loại sản phẩm</h2>
+            </div>
+        </div>
+
+        <div class="row row--top-20">
+            <div class="col-md-6">
+                <div class="tab-content">
+                    <form method="post" asp-action="Edit" enctype="multipart/form-data" id="form-validate">
+                        @Html.HiddenFor(model => model.MaLoaiSP)
+                        <div class="tab-content">
+                            <div class="tab-content">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="TenNCC" class="control-label">Tên nhà cung cấp:</label>
+                                            <input type="text" class="form-control" value="@Model.TenLoaiSP" name="TenNCC" required>
+                                            <div class="invalid-feedback">Vui lòng điền vào trường này.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <a href="~/Admin/Category" class="btn btn-outline-secondary">Quay lại</a>
+                            <button type="submit" class="btn btn-outline-danger" style="letter-spacing: 1px;">
+                                Sửa loại sản phẩm
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

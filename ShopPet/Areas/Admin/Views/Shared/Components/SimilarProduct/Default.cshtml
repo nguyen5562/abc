@@ -1,0 +1,33 @@
+﻿<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+        @for (int i = 0; i < Model.Count; i += 3)
+        {
+            <div class="item @(i == 0 ? "active" : "")">
+                @for (int j = i; j < i + 3 && j < Model.Count; j++)
+                {
+                    var items = Model[j];
+                    <div class="col-sm-4">
+                        <div class="product-image-wrapper">
+                            <div class="single-products">
+                                <a asp-action="Details" asp-controller="Product" asp-route-MaSP="@items.MaSP">
+                                    <div class="productinfo text-center">
+                                        <img src="@Url.Content("~/Images/" + items.Anh)" alt="" />
+                                        <h2>@items.GiaBan.ToString("#,##0.###") VNĐ</h2>
+                                        <p>@items.TenSP</p>
+                                        <a class="btn btn-default add-to-cart" asp-action="Add" asp-controller="Cart" asp-route-MaSP="@items.MaSP"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
+        <i class="fa fa-angle-left"></i>
+    </a>
+    <a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
+        <i class="fa fa-angle-right"></i>
+    </a>
+</div>

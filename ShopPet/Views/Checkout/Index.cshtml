@@ -1,0 +1,44 @@
+﻿@model HoaDon
+@{
+	ViewData["Title"] = "Register";
+
+}
+<section id="form">
+	<!--form-->
+	<div class="container">
+		<div class="row" style="display:flex">
+			<div class="col-sm-6 col-sm-offset-1">
+				<div class="signup-form">
+					<!--sign up form-->
+					<h2>Xác nhận đặt hàng</h2>
+					<div asp-validation-summary="All" class="text-danger"></div>
+					<form asp-action="Checkout" asp-controller="Checkout">
+					
+						<input type="text" asp-for="SĐT" class="form-control" placeholder="Số điện thoại" name="SĐT">
+						<span asp-validation-for="SĐT" class="text-danger"></span>
+						<textarea name="Note" placeholder="Ghi chú"></textarea>
+
+						<input type="text" asp-for="DiaChi" class="form-control" placeholder="Địa chỉ" name="DiaChi" style="
+							   margin-top: 10px;">
+						<span asp-validation-for="DiaChi" class="text-danger"></span>
+						<div>
+							<button type="submit" class="btn btn-warning" style="width:100%">Thanh toán khi nhận hàng</button>
+							<a asp-action="PaypalCheckout">
+								<img src="~/Images/pp.png" height="100" />
+							</a>
+						</div>
+					</form>
+				</div><!--/sign up form-->
+			</div>
+			<div class="col-sm-6 col-sm-offset-1">
+				<vc:cart></vc:cart>
+			</div>
+		</div>
+	</div>
+	
+</section><!--/form-->
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

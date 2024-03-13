@@ -1,0 +1,50 @@
+﻿@model CartItemViewModel
+<h4>Xác nhận đơn hàng</h4>
+<section id="cart_items">
+    <div class="container">
+        <div class="table-responsive cart_info">
+            <table class="table table-condensed" style="width:564px">
+               
+                <tbody>
+                    @if (Model != null && Model.CartItems != null && Model.CartItems.Any())
+                    {
+                        @foreach (var item in Model.CartItems)
+                        {
+                            <tr>
+                                <td class="cart_product" style="margin:0px">
+                                    <a href=""><img src="@Url.Content("~/Images/" + item.Anh)" alt="" width="100" height="100"></a>
+                                </td>
+                                <td class="cart_description text-center">
+                                    <h4><a href="">@item.TenSP</a></h4>
+                                    <p>Web ID: @item.MaSP</p>
+                                </td>
+                                <td class="cart_price">
+                                    <p>@item.donGia.ToString("#,##0.###") đ</p>
+                                </td>
+                                <td class="cart_quantity">
+                                    <input name="newQuantity" style="width:50px" type="number" value="@item.soLuong" min="1" />
+                                </td>
+                                <td class="cart_total">
+                                    <p>@item.thanhTien.ToString("#,##0.###") đ</p>
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td colspan="6">
+                                <p class="cart_total_price">Tổng thành tiền: @Model.GrandTotal.ToString("#,##0.###") đ</p>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5">
+                                <h4>Giỏ hàng của bạn đang trống</h4>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section> <!--/#cart_items-->

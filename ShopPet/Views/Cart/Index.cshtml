@@ -1,0 +1,99 @@
+﻿@using ShopPet.Models.ViewModels
+@using ShopPet.Extensions
+@inject CheckRole CheckRoleInstance
+@model CartItemViewModel
+@{
+	string username = User.Identity.Name;
+}
+<h4>Gio Hàng</h4>
+<section id="cart_items">
+	<div class="container">
+		<div class="breadcrumbs">
+			<ol class="breadcrumb">
+				<li><a href="#">Home</a></li>
+				<li class="active">Shopping Cart</li>
+			</ol>
+		</div>
+		<div class="table-responsive cart_info">
+			<table class="table table-condensed">
+				<thead>
+					<tr class="cart_menu">
+						<td class="text-center">Ảnh</td>
+						<td class="text-center">Tên sản phẩm</td>
+						<td class="text-center">Giá</td>
+						<td class="text-center">số lượng</td>
+						<td class="text-center">Tổng</td>
+						<td></td>
+					</tr>
+				</thead>
+				<tbody>
+					@if (Model != null && Model.CartItems != null)
+					{
+						@if (@Model.CartItems.Count() > 0)
+						{
+							@foreach (var item in Model.CartItems)
+							{
+								<tr>
+									<td class="cart_product">
+										<a href=""><img src="@Url.Content("~/Images/" + item.Anh)" alt="" width="100" height="100"></a>
+									</td>
+									<td class="cart_description text-center">
+										<h4><a href="">@item.TenSP</a></h4>
+										<p>Web ID: @item.MaSP</p>
+									</td>
+									<td class="cart_price">
+										<p>@item.donGia.ToString("#,##0.###")đ</p>
+									</td>
+					
+										@using (Html.BeginForm("UpdateCart", "Cart", new { maSP = item.MaSP }, FormMethod.Post))
+										{
+										<td>
+											<input name="newQuantity" style="width:50px" type="number" value="@item.soLuong" min="1" />
+										</td>
+
+										<td class="cart_price">
+											<p>@item.thanhTien.ToString("#,##0.###") đ</p>
+										</td>
+										<td style="width: 190px">
+											<button class="btn btn-info" type="submit">Cập nhật giỏ hàng</button>
+										</td>										
+										}
+									
+									
+									<td >
+										<a class=" btn btn-danger" asp-controller="Cart" asp-action="Remove" asp-route-MaSP="@item.MaSP"><i class="fa fa-times"></i></a>
+										
+									</td>
+								</tr>
+								
+							}
+							<tr>
+								<td colspan="6"><p class="cart_total_price">Tổng thành tiền:@Model.GrandTotal.ToString("#,##0.###")đ</p></td>
+								<td><a class="btn btn-danger btn-sm mt-0 " asp-controller="Cart" asp-action="Clear">Clear </a></td>
+								<td>
+									@if (User.Identity?.IsAuthenticated ?? false)
+									{
+										@if (await CheckRoleInstance.CheckAccessUserByUser(username))
+										{
+											<a class="btn btn-warning btn-sm mt-0" asp-controller="Checkout" asp-action="Index">Xác nhận đơn hàng</a>
+										}
+									}
+								</td>
+							</tr>
+						}
+						else
+						{
+							<h4>Giỏ hàng của bạn đang trống</h4>
+						}
+					}
+
+				</tbody>
+			</table>
+		</div>
+	</div>
+</section> <!--/#cart_items-->
+
+
+
+
+

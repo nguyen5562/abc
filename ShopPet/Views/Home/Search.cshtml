@@ -1,0 +1,185 @@
+﻿@* @model IEnumerable<SanPham> *@
+@* @using X.PagedList.Mvc.Core; *@
+@model X.PagedList.IPagedList<SanPham>
+@using X.PagedList.Mvc.Core;
+@{
+	ViewBag.Title = "Search";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="col-sm-3">
+	@* @Html.Partial("_SidebarParti"); *@
+	@{
+		await Html.RenderPartialAsync("~/Views/Shared/_SidebarParti.cshtml");
+	}
+</div>
+
+<div class="col-sm-9 padding-right">
+	<div class="features_items">
+		<!--features_items-->
+		<h2 class="title text-center">Features Items</h2>
+		@* @using (Html.BeginForm("Search", "Home"))
+		{ *@
+			<form asp-action="search" asp-controller="Home">
+				<div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4">
+					<div class="input-groupd-flex">
+					<input id="TimKiem" type="text" name="tenSP" placeholder="Nhập từ bạn cần tìm?" aria-describedby="button-addon1" class="form-control border-0 bg-light">
+						<div class="input-group-append">
+							<button id="button-addon1"  class="btn btn-link text-primary"><i class="fa fa-search"></i></button>
+						</div>
+					</div>
+				</div>
+			</form>
+		@* } *@
+		@foreach (var item in Model)
+		{
+			<div class="col-sm-4">
+
+				<div class="product-image-wrapper">
+
+					<div class="single-products">
+						<a asp-action="Details" asp-controller="Product" asp-route-MaSP="@item.MaSP">
+							<div class="productinfo text-center" style="height: 500px;">
+								<img src="@Url.Content("~/Images/" + item.Anh)" alt="@item.TenSP" style="height: 300px;" />
+								<h2>@item.GiaBan.ToString("#,##0.###") VNĐ</h2>
+								<p>@item.TenSP</p>
+								<a class="btn btn-default add-to-cart" asp-action="Add" asp-controller="Cart" asp-route-MaSP="@item.MaSP"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+							</div>
+						</a>
+					</div>
+
+					<div class="choose">
+						<ul class="nav nav-pills nav-justified">
+							<li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
+							<li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
+						</ul>
+					</div>
+				</div>
+
+			</div>
+		}
+		<div class="col-sm-12 col-md-7">
+			<div class="dataTables_paginate paging_simple_numbers" id="example1_paginate">
+				<ul class="pagination">
+					@if (Model.HasPreviousPage)
+					{
+						<li class="paginate_button page-item" id="example1_previous">
+							<a href="@Url.Action("Index", new { page = 1 })" aria-controls="example1" data-dt-idx="0" tabindex="0" class="page-link">First</a>
+						</li>
+					}
+					@for (int i = 1; i <= Model.PageCount; i++)
+					{
+						<li class="paginate_button page-item @(i == ViewBag.Page ? "active" : "")">
+							<a href="@Url.Action("Index", new { page = i })" aria-controls="example1" data-dt-idx="@i" tabindex="0" class="page-link">@i</a>
+						</li>
+					}
+					@if (Model.HasNextPage)
+					{
+						<li class="paginate_button page-item" id="example1_next">
+							<a href="@Url.Action("Index", new { page = Model.PageCount })" aria-controls="example1" data-dt-idx="2" tabindex="0" class="page-link">Last</a>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+	</div><!--features_items-->
+
+
+	<div class="recommended_items">
+		<!--recommended_items-->
+		<h2 class="title text-center">recommended items</h2>
+
+		<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
+			<div class="carousel-inner">
+				<div class="item active">
+					<div class="col-sm-4">
+						<div class="product-image-wrapper">
+							<div class="single-products">
+								<div class="productinfo text-center">
+									<img src="images/home/recommend1.jpg" alt="" />
+									<h2>$56</h2>
+									<p>Easy Polo Black Edition</p>
+									<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+								</div>
+
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="product-image-wrapper">
+							<div class="single-products">
+								<div class="productinfo text-center">
+									<img src="images/home/recommend2.jpg" alt="" />
+									<h2>$56</h2>
+									<p>Easy Polo Black Edition</p>
+									<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+								</div>
+
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="product-image-wrapper">
+							<div class="single-products">
+								<div class="productinfo text-center">
+									<img src="images/home/recommend3.jpg" alt="" />
+									<h2>$56</h2>
+									<p>Easy Polo Black Edition</p>
+									<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="item">
+					<div class="col-sm-4">
+						<div class="product-image-wrapper">
+							<div class="single-products">
+								<div class="productinfo text-center">
+									<img src="images/home/recommend1.jpg" alt="" />
+									<h2>$56</h2>
+									<p>Easy Polo Black Edition</p>
+									<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+								</div>
+
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="product-image-wrapper">
+							<div class="single-products">
+								<div class="productinfo text-center">
+									<img src="images/home/recommend2.jpg" alt="" />
+									<h2>$56</h2>
+									<p>Easy Polo Black Edition</p>
+									<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+								</div>
+
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="product-image-wrapper">
+							<div class="single-products">
+								<div class="productinfo text-center">
+									<img src="images/home/recommend3.jpg" alt="" />
+									<h2>$56</h2>
+									<p>Easy Polo Black Edition</p>
+									<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
+				<i class="fa fa-angle-left"></i>
+			</a>
+			<a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
+				<i class="fa fa-angle-right"></i>
+			</a>
+		</div>
+	</div><!--/recommended_items-->
+
+</div>

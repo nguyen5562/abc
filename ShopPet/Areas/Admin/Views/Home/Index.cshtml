@@ -1,0 +1,411 @@
+﻿@using ShopPet.Extensions;
+@inject CheckRole CheckRoleInstance
+@model IEnumerable<ProductViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    string username = User.Identity.Name;
+}
+
+
+@if (await CheckRoleInstance.CheckAccessAdminByUser(username))
+{
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Dashboard</h1>
+                    </div><!-- /.col -->
+
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text">CPU Traffic</span>
+                                <span class="info-box-number">
+                                    10
+                                    <small>%</small>
+                                </span>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <div class="info-box mb-3">
+                            <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-money-bill"></i></span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text">Doanh thu</span>
+                                <span class="info-box-number">@ViewBag.doanhthu.ToString("#,##0.###")đ</span>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+                    <!-- fix for small devices only -->
+                    <div class="clearfix hidden-md-up"></div>
+
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <div class="info-box mb-3">
+                            <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Hóa đơn</span>
+                                <span class="info-box-number">@ViewBag.SoLuongHoaDon</span>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <div class="info-box mb-3">
+                            <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text">Khách hàng</span>
+                                <span class="info-box-number">@ViewBag.soluongkhachang</span>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        @* <div class="card">
+                            <div class="card-header border-0">
+                                <div class="d-flex justify-content-between">
+                                    <h3 class="card-title">Online Store Visitors</h3>
+                                    <a href="javascript:void(0);">View Report</a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <p class="d-flex flex-column">
+                                        <span class="text-bold text-lg">820</span>
+                                        <span>Visitors Over Time</span>
+                                    </p>
+                                    <p class="ml-auto d-flex flex-column text-right">
+                                        <span class="text-success">
+                                            <i class="fas fa-arrow-up"></i> 12.5%
+                                        </span>
+                                        <span class="text-muted">Since last week</span>
+                                    </p>
+                                </div>
+                                <!-- /.d-flex -->
+
+                                <div class="position-relative mb-4">
+                                    <canvas id="visitors-chart" height="200"></canvas>
+                                </div>
+                                
+
+                                <div class="d-flex flex-row justify-content-end">
+                                    <span class="mr-2">
+                                        <i class="fas fa-square text-primary"></i> This Week
+                                    </span>
+
+                                    <span>
+                                        <i class="fas fa-square text-gray"></i> Last Week
+                                    </span>
+                                </div>
+                            </div>
+                        </div> *@
+                        @{
+                            await Html.RenderPartialAsync("~/Areas/Admin/Views/Home/DoanhThu.cshtml");
+                        } 
+                        <!-- /.card -->
+
+                        <div class="card">
+                            <div class="card-header border-0">
+                                <h3 class="card-title">Products</h3>
+                                <div class="card-tools">
+                                    <a href="#" class="btn btn-tool btn-sm">
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-tool btn-sm">
+                                        <i class="fas fa-bars"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-striped table-valign-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Price</th>
+                                            <th>Sales</th>
+                                            <th>More</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var items in Model)
+                                        {
+                                        <tr>
+                                            <td>
+                                                    <img src="@Url.Content("~/Images/" + items.Anh)" alt="@items.TenSP" class="img-circle img-size-32 mr-2">
+                                               @items.TenSP
+                                            </td>
+                                                <td>  @items.GiaBan.ToString("#,##0.###")</td>
+                                            <td>
+                                                <small class="text-success mr-1">
+                                                    <i class="fas fa-arrow-up"></i>
+                                                    12%
+                                                </small>
+                                                @items.TongSoLuong
+                                            </td>
+                                            <td>
+                                                <a href="#" class="text-muted">
+                                                    <i class="fas fa-search"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                       @*  @{
+                            await Html.RenderPartialAsync("~/Areas/Admin/Views/Home/TopSales.cshtml");
+                        } *@
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col-md-6 -->
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header border-0">
+                                <div class="d-flex justify-content-between">
+                                    <h3 class="card-title">Sales</h3>
+                                    <a href="javascript:void(0);">View Report</a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <p class="d-flex flex-column">
+                                        <span class="text-bold text-lg">$18,230.00</span>
+                                        <span>Sales Over Time</span>
+                                    </p>
+                                    <p class="ml-auto d-flex flex-column text-right">
+                                        <span class="text-success">
+                                            <i class="fas fa-arrow-up"></i> 33.1%
+                                        </span>
+                                        <span class="text-muted">Since last month</span>
+                                    </p>
+                                </div>
+                                <!-- /.d-flex -->
+
+                               @*  <div class="position-relative mb-4">
+                                    <canvas id="sales-chart" height="200"></canvas>
+                                </div> *@                                 
+                                    <div class="card-body">
+                                        <div class="chart">
+                                            <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                        </div>
+                                    </div>                               
+                                <div class="d-flex flex-row justify-content-end">
+                                    <span class="mr-2">
+                                        <i class="fas fa-square text-primary"></i> This year
+                                    </span>
+
+                                    <span>
+                                        <i class="fas fa-square text-gray"></i> Last year
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+
+                        <div class="card">
+                            <div class="card-header border-0">
+                                <h3 class="card-title">Online Store Overview</h3>
+                                <div class="card-tools">
+                                    <a href="#" class="btn btn-sm btn-tool">
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-tool">
+                                        <i class="fas fa-bars"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
+                                    <p class="text-success text-xl">
+                                        <i class="ion ion-ios-refresh-empty"></i>
+                                    </p>
+                                    <p class="d-flex flex-column text-right">
+                                        <span class="font-weight-bold">
+                                            <i class="ion ion-android-arrow-up text-success"></i> 12%
+                                        </span>
+                                        <span class="text-muted">CONVERSION RATE</span>
+                                    </p>
+                                </div>
+                                <!-- /.d-flex -->
+                                <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
+                                    <p class="text-warning text-xl">
+                                        <i class="ion ion-ios-cart-outline"></i>
+                                    </p>
+                                    <p class="d-flex flex-column text-right">
+                                        <span class="font-weight-bold">
+                                            <i class="ion ion-android-arrow-up text-warning"></i> 0.8%
+                                        </span>
+                                        <span class="text-muted">SALES RATE</span>
+                                    </p>
+                                </div>
+                                <!-- /.d-flex -->
+                                <div class="d-flex justify-content-between align-items-center mb-0">
+                                    <p class="text-danger text-xl">
+                                        <i class="ion ion-ios-people-outline"></i>
+                                    </p>
+                                    <p class="d-flex flex-column text-right">
+                                        <span class="font-weight-bold">
+                                            <i class="ion ion-android-arrow-down text-danger"></i> 1%
+                                        </span>
+                                        <span class="text-muted">REGISTRATION RATE</span>
+                                    </p>
+                                </div>
+                                <!-- /.d-flex -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.col-md-6 -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+}
+else
+{
+    {
+        Layout = null;
+    }
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Access Denied</title>
+        <script>
+            function goBack() {
+                var url = '/Home/Index';
+                window.location.href = url;
+            }
+        </script>
+    </head>
+    <body>
+        <div style="text-align: center; padding: 50px;">
+            <h1>Access Denied</h1>
+            <p>You do not have permission to access this page.</p>
+            <button onclick="goBack()">Go Home</button>
+        </div>
+    </body>
+    </html>
+
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+    <script>
+    let myChart = document.getElementById('barChart').getContext('2d');
+
+    // Global Options
+    Chart.defaults.global.defaultFontFamily = 'Lato';
+    Chart.defaults.global.defaultFontSize = 18;
+    Chart.defaults.global.defaultFontColor = '#777';
+
+    let massPopChart = new Chart(myChart, {
+        type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+        data: {
+            labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+            datasets: [{
+                label: 'Doanh thu',
+                data: [
+                    617594,
+                    181045,
+                    153060,
+                    106519,
+                    105162,
+                    95072,
+                    617594,
+                    181045,
+                    153060,
+                    106519, 
+                    105162,
+                    95072
+                ],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)',
+                    'rgba(128, 0, 0, 0.6)',
+                    'rgba(0, 128, 0, 0.6)',
+                    'rgba(0, 0, 128, 0.6)',
+                    'rgba(255, 0, 255, 0.6)',
+                    'rgba(255, 255, 0, 0.6)',
+                    'rgba(0, 255, 255, 0.6)'
+                ],
+
+                borderWidth: 1,
+                borderColor: '#777',
+                hoverBorderWidth: 3,
+                hoverBorderColor: '#000'
+            }]
+        },
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Largest Cities In Massachusetts',
+                    fontSize: 25
+                }
+            },
+            legend: {
+                display: true,
+                position: 'right',
+                labels: {
+                    fontColor: '#000'
+                }
+            },
+            layout: {
+                padding: {
+                    left: 50,
+                    right: 0,
+                    bottom: 0,
+                    top: 0
+                }
+            },
+            tooltips: {
+                enabled: true
+            }
+        }
+    });
+</script>
+
+
+
