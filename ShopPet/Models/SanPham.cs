@@ -11,7 +11,6 @@ namespace ShopPet.Models
         public int MaSP { get; set; }
         public string TenSP { get; set; }
         public string MoTa { get; set; }
-        public string GiongLoai { get; set; }
         public decimal GiaBan { get; set; }
         public decimal GiaNhap { get; set; }
         public string Anh { get; set; }

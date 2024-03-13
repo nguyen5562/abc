@@ -31,7 +31,6 @@ namespace ShopPet.Controllers
 							MaSP = sp.MaSP,
 							TenSP = sp.TenSP,
 							MoTa = sp.MoTa,
-							GiongLoai = sp.GiongLoai,
 							GiaBan = sp.GiaBan,
 							Anh = sp.Anh,
 							SoLuongTon = sp.SoLuongTon,

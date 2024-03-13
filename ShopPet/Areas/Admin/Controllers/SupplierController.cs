@@ -33,12 +33,6 @@ namespace ShopPet.Areas.Admin.Controllers
             if (!string.IsNullOrEmpty(ten))
                 query = query.Where(h => h.TenNCC.Contains(ten, StringComparison.OrdinalIgnoreCase)).ToList();
 
-            if (!string.IsNullOrEmpty(dc))
-                query = query.Where(h => h.DiaChi.Contains(dc, StringComparison.OrdinalIgnoreCase)).ToList();
-
-            if (!string.IsNullOrEmpty(sdt))
-                query = query.Where(h => h.SĐT.Contains(sdt, StringComparison.OrdinalIgnoreCase)).ToList();
-
             var totalItemCount = query.Count();
             var model = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             var pagedList = new StaticPagedList<NhaCungCap>(model, page, pageSize, totalItemCount);

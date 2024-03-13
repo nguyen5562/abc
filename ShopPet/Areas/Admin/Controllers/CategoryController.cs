@@ -142,7 +142,9 @@ namespace ShopPet.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            return View(loaiSanPham);
+            _context.Remove(loaiSanPham);
+            _context.SaveChanges();
+            return RedirectToAction("Index", "Category");
         }
 
         // POST: Admin/Category/Delete/5

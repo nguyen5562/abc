@@ -33,7 +33,6 @@ namespace ShopPet.Areas.Admin.Controllers
                             MaSP = sp.MaSP,
                             TenSP = sp.TenSP,
                             MoTa = sp.MoTa,
-                            GiongLoai = sp.GiongLoai,
                             GiaBan = sp.GiaBan,
                             GiaNhap = sp.GiaNhap,
                             Anh = sp.Anh,
@@ -102,7 +101,6 @@ namespace ShopPet.Areas.Admin.Controllers
             spmoi.GiaNhap = sp.GiaNhap;
             spmoi.GiaBan = sp.GiaBan;
             spmoi.SoLuongTon = sp.SoLuongTon;
-            spmoi.GiongLoai = sp.GiongLoai;
 
             if (image1 != null && image1.Length > 0)
             {
@@ -171,7 +169,6 @@ namespace ShopPet.Areas.Admin.Controllers
             }
             product.TenSP = sp.TenSP;
             product.MoTa = sp.MoTa;
-            product.GiongLoai = sp.GiongLoai;
             product.GiaBan = sp.GiaBan;
             product.GiaNhap = sp.GiaNhap;
             product.SoLuongTon = sp.SoLuongTon;

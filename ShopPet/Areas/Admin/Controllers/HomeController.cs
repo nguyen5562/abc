@@ -29,14 +29,13 @@ namespace ShopPet.Areas.Admin.Controllers
             var result = (from cthd in _dataContext.ChiTietHoaDons
                           join sp in _dataContext.SanPhams on cthd.SanPhamId equals sp.MaSP
                           join hd in _dataContext.HoaDons on cthd.HoaDonId equals hd.MaHD
-                          group new { cthd, sp } by new { sp.MaSP, sp.TenSP, sp.MoTa, sp.GiongLoai, sp.GiaBan, sp.GiaNhap, sp.Anh, sp.SoLuongTon } into grouped
+                          group new { cthd, sp } by new { sp.MaSP, sp.TenSP, sp.MoTa, sp.GiaBan, sp.GiaNhap, sp.Anh, sp.SoLuongTon } into grouped
                           orderby grouped.Sum(x => x.cthd.Quantity) descending
                           select new ProductViewModel()
                           {
                               MaSP = grouped.Key.MaSP,
                               TenSP = grouped.Key.TenSP,
                               MoTa = grouped.Key.MoTa,
-                              GiongLoai = grouped.Key.GiongLoai,
                               GiaBan = grouped.Key.GiaBan,
                               GiaNhap = grouped.Key.GiaNhap,
                               Anh = grouped.Key.Anh,
