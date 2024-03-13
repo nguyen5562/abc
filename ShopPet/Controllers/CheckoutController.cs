@@ -74,6 +74,11 @@ namespace ShopPet.Controllers
                     orderDetail.SanPhamId = cart.MaSP;
                     orderDetail.Price = (decimal)cart.thanhTien;
                     orderDetail.Quantity = cart.soLuong;
+                    var product = _dataContext.SanPhams.Find(cart.MaSP);
+                    if (product != null)
+                    {
+                        product.SoLuongTon -= cart.soLuong;
+                    }
                     _dataContext.Add(orderDetail);
                     _dataContext.SaveChanges();
                 }
@@ -230,6 +235,11 @@ namespace ShopPet.Controllers
                 orderDetail.SanPhamId = cart.MaSP;
                 orderDetail.Price = (decimal)cart.thanhTien;
                 orderDetail.Quantity = cart.soLuong;
+                var product = _dataContext.SanPhams.Find(cart.MaSP);
+                if (product != null)
+                {
+                    product.SoLuongTon -= cart.soLuong;
+                }
                 _dataContext.Add(orderDetail);
                 _dataContext.SaveChanges();
             }
